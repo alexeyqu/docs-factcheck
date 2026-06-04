@@ -2,8 +2,8 @@ const N8N_WEBHOOK_URL = PropertiesService.getScriptProperties().getProperty('n8n
 
 function onOpen() {
   DocumentApp.getUi()
-    .createMenu('🛠️ Инструменты')
-    .addItem('🔍 Подсветить факты для фактчекинга', 'runFactCheck')
+    .createMenu('🛠️ Tools')
+    .addItem('🔍 Highlight facts for fact-checking', 'runFactCheck')
     .addToUi();
 }
 
@@ -13,7 +13,7 @@ function runFactCheck() {
 
   const fullText = body.getText();
   if (!fullText.trim()) {
-    DocumentApp.getUi().alert('Документ пуст.');
+    DocumentApp.getUi().alert('The document is empty.');
     return;
   }
 
@@ -21,14 +21,14 @@ function runFactCheck() {
   if (!facts) return;
 
   _highlightFacts(body, facts);
-  DocumentApp.getUi().alert('Факты успешно подсвечены в тексте!');
+  DocumentApp.getUi().alert('Facts highlighted successfully!');
 }
 
 function _callN8N(text) {
   if (!N8N_WEBHOOK_URL) {
     DocumentApp.getUi().alert(
-      'Не задан URL вебхука n8n. ' +
-        'Добавьте Script Property "n8n-webhook-url" в настройках проекта.'
+      'n8n webhook URL is not set. ' +
+        'Add the Script Property "n8n-webhook-url" in your project settings.'
     );
     return null;
   }
@@ -42,7 +42,7 @@ function _callN8N(text) {
 
   if (response.getResponseCode() !== 200) {
     DocumentApp.getUi().alert(
-      'Ошибка n8n: HTTP ' +
+      'n8n error: HTTP ' +
         response.getResponseCode() +
         '\n\n' +
         response.getContentText()
@@ -52,11 +52,11 @@ function _callN8N(text) {
 
   try {
     const facts = JSON.parse(response.getContentText());
-    if (!Array.isArray(facts)) throw new Error('ожидается массив');
+    if (!Array.isArray(facts)) throw new Error('expected an array');
     return facts;
   } catch (e) {
     DocumentApp.getUi().alert(
-      'Ошибка парсинга ответа n8n: ' +
+      'Failed to parse n8n response: ' +
         e.message +
         '\n\n' +
         response.getContentText()
@@ -70,13 +70,13 @@ function _highlightFacts(body, facts) {
 
   facts.forEach((fact, index) => {
     if (!fact.text || !fact.reason) {
-      console.log(`Пропущен факт ${index + 1}: отсутствует text или reason`);
+      console.log(`Skipping fact ${index + 1}: missing text or reason`);
       return;
     }
 
     const found = body.findText(fact.text.trim());
     if (!found) {
-      console.log(`Не найден текст для факта ${index + 1}: "${fact.text}"`);
+      console.log(`Could not find text for fact ${index + 1}: "${fact.text}"`);
       return;
     }
 
@@ -89,7 +89,7 @@ function _highlightFacts(body, facts) {
 
     textEl.setBackgroundColor(start, end, '#FFFF00');
 
-    let comment = ` [🔍 Факт-чек: ${fact.reason}`;
+    let comment = ` [🔍 Fact-check: ${fact.reason}`;
     if (fact.context && fact.context.trim()) {
       comment += ` | 📝 ${fact.context}`;
     }
@@ -103,14 +103,14 @@ function _highlightFacts(body, facts) {
     textEl.setItalic(end + 1, commentEnd, true);
 
     processed++;
-    console.log(`Обработан факт ${index + 1}: "${fact.text}"`);
+    console.log(`Processed fact ${index + 1}: "${fact.text}"`);
   });
 
   if (processed === 0) {
     DocumentApp.getUi().alert(
-      'Не удалось найти в тексте ни одного из указанных фактов.'
+      'None of the returned facts could be located in the document text.'
     );
   } else {
-    console.log(`Успешно обработано ${processed} из ${facts.length} фактов`);
+    console.log(`Successfully processed ${processed} of ${facts.length} facts`);
   }
 }

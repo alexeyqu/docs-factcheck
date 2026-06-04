@@ -16,7 +16,7 @@ Google Doc  →  Apps Script  →  n8n webhook  →  (AI / any logic)
                     └────── [{text, reason, context}] ──┘
 ```
 
-1. The editor triggers **🔍 Подсветить факты для фактчекинга** from the custom menu.
+1. The editor triggers **🔍 Highlight facts for fact-checking** from the custom menu.
 2. The script POSTs `{ "text": "<document text>" }` to the configured n8n webhook.
 3. n8n runs whatever analysis it wants and returns a JSON array:
    ```json
