@@ -4,7 +4,7 @@ A Google Apps Script add-on for Google Docs that sends article text to an **n8n 
 
 All AI logic lives in n8n. The AppScript contains only the Google Docs integration and the n8n client.
 
-Originally developed for [Системный Блок](https://sysblok.ru), a Russian-language digital-technology journal.
+Originally developed for [Sysblok / Системный Блокъ](https://www.linkedin.com/company/sysblok/), a Russian-language digital-technology journal.
 
 ---
 
