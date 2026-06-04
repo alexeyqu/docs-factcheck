@@ -28,7 +28,8 @@ Google Doc  →  Apps Script  →  n8n webhook  →  (AI / any logic)
 
 ## Screenshot
 
-<!-- Add a screenshot of the result here -->
+<img width="1724" height="843" alt="image" src="https://github.com/user-attachments/assets/e819aba2-c10b-418c-a3ad-88c7fd8cbefc" />
+
 
 ## Files
 
